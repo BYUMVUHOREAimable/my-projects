@@ -1,0 +1,190 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="container mx-auto px-4 py-8">
+    <!-- Statistics Cards -->
+    <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-8">
+        <div class="bg-white rounded-lg shadow p-6">
+            <h3 class="text-gray-500 text-sm font-medium">Total Projects</h3>
+            <p class="text-3xl font-bold">{{ total_projects }}</p>
+        </div>
+        <div class="bg-white rounded-lg shadow p-6">
+            <h3 class="text-gray-500 text-sm font-medium">Active Projects</h3>
+            <p class="text-3xl font-bold text-blue-600">{{ active_projects }}</p>
+        </div>
+        <div class="bg-white rounded-lg shadow p-6">
+            <h3 class="text-gray-500 text-sm font-medium">Completed Projects</h3>
+            <p class="text-3xl font-bold text-green-600">{{ completed_projects }}</p>
+        </div>
+        <div class="bg-white rounded-lg shadow p-6">
+            <h3 class="text-gray-500 text-sm font-medium">Planning Projects</h3>
+            <p class="text-3xl font-bold text-yellow-600">{{ planning_projects }}</p>
+        </div>
+    </div>
+
+    <!-- Charts Row -->
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-8">
+        <!-- Status Distribution -->
+        <div class="bg-white rounded-lg shadow p-6">
+            <h3 class="text-lg font-semibold mb-4">Project Status Distribution</h3>
+            <canvas id="statusChart"></canvas>
+        </div>
+        <!-- Project Types -->
+        <div class="bg-white rounded-lg shadow p-6">
+            <h3 class="text-lg font-semibold mb-4">Project Types</h3>
+            <canvas id="typeChart"></canvas>
+        </div>
+    </div>
+
+    <!-- Timeline Chart -->
+    <div class="bg-white rounded-lg shadow p-6 mb-8">
+        <h3 class="text-lg font-semibold mb-4">Projects Timeline (Last 30 Days)</h3>
+        <canvas id="timelineChart"></canvas>
+    </div>
+
+    <!-- Bottom Row -->
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+        <!-- Upcoming Due Dates -->
+        <div class="bg-white rounded-lg shadow p-6">
+            <h3 class="text-lg font-semibold mb-4">
+                <i class="fas fa-calendar-alt mr-2"></i>Upcoming Due Dates
+            </h3>
+            <div class="space-y-4">
+                {% for project in upcoming_due_dates %}
+                <div class="flex justify-between items-center p-3 hover:bg-gray-50 rounded-lg transition-colors">
+                    <div>
+                        <h4 class="font-medium">{{ project.title }}</h4>
+                        <p class="text-sm text-gray-500">Due: {{ project.due_date }}</p>
+                    </div>
+                    <span class="px-3 py-1 rounded-full text-sm 
+                        {% if project.status == 'active' %}bg-blue-100 text-blue-800
+                        {% else %}bg-yellow-100 text-yellow-800{% endif %}">
+                        {{ project.get_status_display }}
+                    </span>
+                </div>
+                {% empty %}
+                <p class="text-gray-500">No upcoming due dates</p>
+                {% endfor %}
+            </div>
+        </div>
+
+        <!-- Recent Activity -->
+        <div class="bg-white rounded-lg shadow p-6">
+            <h3 class="text-lg font-semibold mb-4">
+                <i class="fas fa-history mr-2"></i>Recent Activity
+            </h3>
+            <div class="space-y-4">
+                {% for project in recent_projects %}
+                <div class="flex justify-between items-center p-3 hover:bg-gray-50 rounded-lg transition-colors">
+                    <div>
+                        <h4 class="font-medium">{{ project.title }}</h4>
+                        <p class="text-sm text-gray-500">Updated: {{ project.updated_at|timesince }} ago</p>
+                    </div>
+                    <span class="px-3 py-1 rounded-full text-sm 
+                        {% if project.status == 'completed' %}bg-green-100 text-green-800
+                        {% elif project.status == 'active' %}bg-blue-100 text-blue-800
+                        {% elif project.status == 'on_hold' %}bg-red-100 text-red-800
+                        {% else %}bg-yellow-100 text-yellow-800{% endif %}">
+                        {{ project.get_status_display }}
+                    </span>
+                </div>
+                {% empty %}
+                <p class="text-gray-500">No recent activity</p>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    // Parse the JSON data from Django
+    const statusChartData = JSON.parse('{{ status_chart_data|safe }}');
+    const typeChartData = JSON.parse('{{ type_chart_data|safe }}');
+    const timelineData = JSON.parse('{{ timeline_data|safe }}');
+
+    // Status Distribution Chart
+    new Chart(document.getElementById('statusChart'), {
+        type: 'pie',
+        data: {
+            labels: statusChartData.labels,
+            datasets: [{
+                data: statusChartData.data,
+                backgroundColor: [
+                    '#3B82F6', // blue
+                    '#10B981', // green
+                    '#F59E0B', // yellow
+                    '#EF4444'  // red
+                ]
+            }]
+        },
+        options: {
+            responsive: true,
+            plugins: {
+                legend: {
+                    position: 'bottom'
+                }
+            }
+        }
+    });
+
+    // Project Types Chart
+    new Chart(document.getElementById('typeChart'), {
+        type: 'doughnut',
+        data: {
+            labels: typeChartData.labels,
+            datasets: [{
+                data: typeChartData.data,
+                backgroundColor: [
+                    '#8B5CF6', // purple
+                    '#EC4899', // pink
+                    '#F97316', // orange
+                    '#14B8A6'  // teal
+                ]
+            }]
+        },
+        options: {
+            responsive: true,
+            plugins: {
+                legend: {
+                    position: 'bottom'
+                }
+            }
+        }
+    });
+
+    // Timeline Chart
+    new Chart(document.getElementById('timelineChart'), {
+        type: 'line',
+        data: {
+            labels: timelineData.labels,
+            datasets: [{
+                label: 'Projects Created',
+                data: timelineData.data,
+                borderColor: '#3B82F6',
+                backgroundColor: 'rgba(59, 130, 246, 0.1)',
+                fill: true,
+                tension: 0.4
+            }]
+        },
+        options: {
+            responsive: true,
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    ticks: {
+                        stepSize: 1
+                    }
+                }
+            },
+            plugins: {
+                legend: {
+                    display: false
+                }
+            }
+        }
+    });
+</script>
+{% endblock %}
