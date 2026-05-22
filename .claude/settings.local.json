@@ -1,0 +1,8 @@
+{
+  "permissions": {
+    "allow": [
+      "PowerShell(Get-ChildItem -Path \"C:\\\\Users\\\\aimab\\\\Documents\\\\MyProjects\" -Recurse -Force -Filter \".git\" | Where-Object { $_.FullName -ne \"C:\\\\Users\\\\aimab\\\\Documents\\\\MyProjects\\\\.git\" } | Select-Object FullName)",
+      "PowerShell(Get-ChildItem -Path \"C:\\\\Users\\\\aimab\\\\Documents\\\\MyProjects\\\\DevOps\\\\React_Unit_Test\" -Force | Where-Object { $_.Name -eq \".git\" })"
+    ]
+  }
+}

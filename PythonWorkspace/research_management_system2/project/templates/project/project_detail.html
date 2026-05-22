@@ -1,0 +1,72 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="container mx-auto px-4 py-8 max-w-4xl">
+    <div class="bg-white rounded-xl shadow-xl p-8">
+        <div class="mb-6 flex justify-between items-center">
+            <h1 class="text-3xl font-bold text-gray-900">{{ project.title }}</h1>
+        </div>
+
+        <div class="space-y-6">
+            <div>
+                <h2 class="text-lg font-semibold text-gray-900">Description</h2>
+                <p class="mt-2 text-gray-600">{{ project.description }}</p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div>
+                    <h2 class="text-lg font-semibold text-gray-900">Status</h2>
+                    <p class="mt-2 text-gray-600">{{ project.get_status_display }}</p>
+                </div>
+
+                <div>
+                    <h2 class="text-lg font-semibold text-gray-900">Created By</h2>
+                    <p class="mt-2 text-gray-600">{{ project.created_by.get_full_name|default:project.created_by.username }}</p>
+                </div>
+
+                {% if project.start_date %}
+                    <div>
+                        <h2 class="text-lg font-semibold text-gray-900">Start Date</h2>
+                        <p class="mt-2 text-gray-600">{{ project.start_date }}</p>
+                    </div>
+                {% endif %}
+
+                {% if project.due_date %}
+                    <div>
+                        <h2 class="text-lg font-semibold text-gray-900">Due Date</h2>
+                        <p class="mt-2 text-gray-600">{{ project.due_date }}</p>
+                    </div>
+                {% endif %}
+            </div>
+
+            {% if project.file %}
+                <div>
+                    <h2 class="text-lg font-semibold text-gray-900">Project Files</h2>
+                    <div class="mt-2">
+                        <a href="{{ project.file.url }}" 
+                           class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-lg text-white bg-blue-600 hover:bg-blue-700">
+                            Download File
+                        </a>
+                    </div>
+                </div>
+            {% endif %}
+        </div>
+
+        <div class="mt-4 space-x-2">
+            <a href="{% url 'project_list' %}" 
+               class="bg-gray-500 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded">
+                Back to Projects
+            </a>
+            <a href="{% url 'project_update' project.pk %}" 
+               class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+                Edit
+            </a>
+            <a href="{% url 'project_delete' project.pk %}" 
+               class="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded">
+                Delete
+            </a>
+        </div>
+    </div>
+</div>
+{% endblock %}

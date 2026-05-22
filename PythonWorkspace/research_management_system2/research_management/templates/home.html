@@ -1,0 +1,178 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="container mx-auto px-4 py-8">
+    <!-- Hero Section -->
+    <div class="bg-gradient-to-r from-blue-500 to-indigo-600 rounded-lg shadow-xl p-8 mb-8">
+        <h1 class="text-4xl text-white font-bold mb-4">Research Management System</h1>
+        <p class="text-white mb-4">Track and manage research projects efficiently</p>
+        {% if user.is_authenticated %}
+            <div class="space-x-4">
+                <a href="{% url 'project_create' %}" class="bg-white text-blue-600 px-6 py-2 rounded-full hover:bg-gray-100">
+                    Start New Project
+                </a>
+                <a href="{% url 'project_list' %}" class="bg-transparent text-white border-2 border-white px-6 py-2 rounded-full hover:bg-white hover:text-blue-600">
+                    View All Projects
+                </a>
+            </div>
+        {% else %}
+            <a href="{% url 'signup' %}" class="bg-white text-blue-600 px-6 py-2 rounded-full hover:bg-gray-100">
+                Get Started
+            </a>
+        {% endif %}
+    </div>
+
+    {% if user.is_authenticated %}
+        <!-- Quick Stats -->
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+            <div class="bg-white p-6 rounded-lg shadow">
+                <h3 class="text-xl font-semibold mb-2">Total Projects</h3>
+                <p class="text-3xl text-blue-600">{{ total_projects|default:"0" }}</p>
+                <p class="text-gray-500 text-sm mt-2">All your research projects</p>
+            </div>
+            <div class="bg-white p-6 rounded-lg shadow">
+                <h3 class="text-xl font-semibold mb-2">Active Projects</h3>
+                <p class="text-3xl text-green-600">{{ stats.active_projects|default:"0" }}</p>
+                <p class="text-gray-500 text-sm mt-2">Currently in progress</p>
+            </div>
+            <div class="bg-white p-6 rounded-lg shadow">
+                <h3 class="text-xl font-semibold mb-2">Completed Projects</h3>
+                <p class="text-3xl text-purple-600">{{ stats.completed_projects|default:"0" }}</p>
+                <p class="text-gray-500 text-sm mt-2">Successfully finished</p>
+            </div>
+        </div>
+
+        <!-- Charts Section -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+            <div class="bg-white p-6 rounded-lg shadow">
+                <h3 class="text-xl font-semibold mb-4">Projects Timeline</h3>
+                <canvas id="projectsChart"></canvas>
+            </div>
+            <div class="bg-white p-6 rounded-lg shadow">
+                <h3 class="text-xl font-semibold mb-4">Project Status Distribution</h3>
+                <canvas id="statusChart"></canvas>
+            </div>
+        </div>
+
+        <!-- Recent Projects -->
+        <div class="bg-white rounded-lg shadow p-6">
+            <div class="flex justify-between items-center mb-4">
+                <h2 class="text-2xl font-bold">Recent Projects</h2>
+                <a href="{% url 'project_list' %}" class="text-blue-600 hover:underline">View All →</a>
+            </div>
+            {% if recent_projects %}
+                <div class="grid gap-6">
+                    {% for project in recent_projects %}
+                    <div class="border-b pb-4">
+                        <div class="flex justify-between items-start">
+                            <div>
+                                <h3 class="text-xl font-semibold">{{ project.title }}</h3>
+                                <p class="text-gray-600 mt-1">{{ project.description|truncatewords:30 }}</p>
+                                <div class="mt-2 flex items-center space-x-4">
+                                    <span class="text-sm text-gray-500">Created: {{ project.created_at|date:"M d, Y" }}</span>
+                                    <span class="px-2 py-1 text-sm rounded-full 
+                                        {% if project.status == 'active' %}bg-green-100 text-green-800
+                                        {% elif project.status == 'completed' %}bg-purple-100 text-purple-800
+                                        {% else %}bg-gray-100 text-gray-800{% endif %}">
+                                        {{ project.get_status_display }}
+                                    </span>
+                                </div>
+                            </div>
+                            <a href="{% url 'project_detail' project.id %}" 
+                               class="bg-blue-50 text-blue-600 px-4 py-2 rounded-lg hover:bg-blue-100">
+                                View Details
+                            </a>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            {% else %}
+                <div class="text-center py-8">
+                    <p class="text-gray-600 mb-4">No projects yet. Start by creating your first project!</p>
+                    <a href="{% url 'project_create' %}" 
+                       class="inline-flex items-center px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700">
+                        <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
+                        </svg>
+                        Create Project
+                    </a>
+                </div>
+            {% endif %}
+        </div>
+    {% else %}
+        <!-- Features Section for Non-authenticated Users -->
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+            <div class="bg-white p-6 rounded-lg shadow">
+                <h3 class="text-xl font-semibold mb-2">Project Management</h3>
+                <p class="text-gray-600">Organize and track your research projects efficiently</p>
+            </div>
+            <div class="bg-white p-6 rounded-lg shadow">
+                <h3 class="text-xl font-semibold mb-2">Collaboration</h3>
+                <p class="text-gray-600">Work together with team members seamlessly</p>
+            </div>
+            <div class="bg-white p-6 rounded-lg shadow">
+                <h3 class="text-xl font-semibold mb-2">Progress Tracking</h3>
+                <p class="text-gray-600">Monitor project progress and milestones</p>
+            </div>
+        </div>
+    {% endif %}
+</div>
+
+{% if user.is_authenticated %}
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+    // Projects Timeline Chart
+    new Chart(document.getElementById('projectsChart'), {
+        type: 'line',
+        data: {
+            labels: {{ projects_chart_data.labels|safe }},
+            datasets: [{
+                label: 'Projects Created',
+                data: {{ projects_chart_data.data|safe }},
+                borderColor: 'rgb(59, 130, 246)',
+                backgroundColor: 'rgba(59, 130, 246, 0.1)',
+                tension: 0.1,
+                fill: true
+            }]
+        },
+        options: {
+            responsive: true,
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    ticks: {
+                        stepSize: 1
+                    }
+                }
+            }
+        }
+    });
+
+    // Project Status Distribution
+    new Chart(document.getElementById('statusChart'), {
+        type: 'doughnut',
+        data: {
+            labels: {{ status_chart_data.labels|safe }},
+            datasets: [{
+                data: {{ status_chart_data.data|safe }},
+                backgroundColor: [
+                    'rgb(59, 130, 246)',  // blue
+                    'rgb(16, 185, 129)',  // green
+                    'rgb(139, 92, 246)',  // purple
+                    'rgb(209, 213, 219)'  // gray
+                ]
+            }]
+        },
+        options: {
+            responsive: true,
+            plugins: {
+                legend: {
+                    position: 'bottom'
+                }
+            }
+        }
+    });
+</script>
+{% endif %}
+{% endblock %}
