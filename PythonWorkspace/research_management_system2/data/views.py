@@ -1,0 +1,173 @@
+import json
+import os
+from django.shortcuts import render, get_object_or_404, redirect
+from .models import DataCollection, ResearchProject
+from .forms import DataCollectionForm  # Assume you've created a form for DataCollection
+from django.db.models import Count, Avg, Sum
+from django.utils.timezone import now
+from django.db.models.functions import TruncDate
+from rest_framework import serializers
+from rest_framework.decorators import api_view
+from rest_framework.response import Response
+from data.models import DataCollection
+from project.models import ResearchProject
+from django.contrib.auth.models import User
+
+
+
+# List all DataCollections for a specific project
+def data_collection_list(request, project_id):
+    project = get_object_or_404(ResearchProject, id=project_id)
+    data_collections = project.data_collections.all()
+    print(data_collections[0].data.url)
+    return render(request, 'data_collection_list.html', {'project': project, 'data_collections': data_collections})
+
+# Create a new DataCollection for a specific project and participant
+def data_collection_create(request, project_id):
+    project = get_object_or_404(ResearchProject, id=project_id)
+
+    if request.method == 'POST':
+        form = DataCollectionForm(request.POST, request.FILES)
+        if form.is_valid():
+            data_collection = form.save(commit=False)
+            data_collection.project = project
+            data_collection.save()
+            return redirect('data_collection_list', project_id=project.id)
+    else:
+        form = DataCollectionForm()
+    return render(request, 'data_collection_form.html', {'form': form})
+
+# Detail view for a specific DataCollection
+def data_collection_detail(request, project_id, data_collection_id):
+    data_collection = get_object_or_404(DataCollection, id=data_collection_id, project_id=project_id)
+    return render(request, 'data_collection_detail.html', {'data_collection': data_collection})
+
+# Update an existing DataCollection
+def data_collection_update(request, project_id, data_collection_id):
+    data_collection = get_object_or_404(DataCollection, id=data_collection_id, project_id=project_id)
+    if request.method == 'POST':
+        form = DataCollectionForm(request.POST, request.FILES, instance=data_collection)
+        if form.is_valid():
+            form.save()
+            return redirect('data_collection_detail', project_id=project_id, data_collection_id=data_collection.id)
+    else:
+        form = DataCollectionForm(instance=data_collection)
+    return render(request, 'data_collection_form.html', {'form': form, 'project_id': project_id})
+
+# Delete a DataCollection
+def data_collection_delete(request, project_id, data_collection_id):
+    data_collection = get_object_or_404(DataCollection, id=data_collection_id, project_id=project_id)
+    if request.method == 'POST':
+        data_collection.delete()
+        return redirect('data_collection_list', project_id=project_id)
+    return render(request, 'data_collection_confirm_delete.html', {'data_collection': data_collection})
+
+
+
+def dashboard_view(request, project_id):
+    project = project = get_object_or_404(ResearchProject, id=project_id)
+    # Total number of users
+    total_users = User.objects.filter(datacollection__project=project).distinct().count()
+
+    # Total number of data collected
+    total_data_collected = DataCollection.objects.filter(project=project).count()
+
+    # Average data collected by a participant
+    avg_data_collected_per_participant = (
+        total_data_collected / total_users if total_users > 0 else 0
+    )
+
+    # Users over time
+    users_over_time = (
+        User.objects.filter(datacollection__project=project)
+        .annotate(date_joined=TruncDate("date_joined"))
+        .values("date_joined")
+        .annotate(count=Count("id", distinct=True))
+        .order_by("date_joined")
+    )
+    users_chart_data = {
+        "labels": [str(entry["date_joined"]) for entry in users_over_time],
+        "data": [entry["count"] for entry in users_over_time],
+    }
+
+    # Data collection over time (grouped by submission date)
+    data_over_time = (
+        DataCollection.objects.filter(project=project).annotate(date_submitted=TruncDate("data_submission_date"))
+        .values("date_submitted")
+        .annotate(count=Count("id"))
+        .order_by("date_submitted")
+    )
+    data_collection_chart_data = {
+        "labels": [str(entry["date_submitted"]) for entry in data_over_time],
+        "data": [entry["count"] for entry in data_over_time],
+    }
+
+    # Data size over time (grouped by submission date, summed in KB)
+    data_size_over_time = []
+    for entry in data_over_time:
+        date = entry["date_submitted"]
+        size_for_date = 0
+        data_entries = DataCollection.objects.filter(
+            data_submission_date__date=date,
+            project=project
+        )  # Filter entries for this date
+        for data_entry in data_entries:
+            if data_entry.data and os.path.exists(data_entry.data.path):
+                size_for_date += os.path.getsize(data_entry.data.path)  # Size in bytes
+        data_size_over_time.append({"date": date, "total_size": size_for_date})
+
+    data_size_chart_data = {
+        "labels": [str(entry["date"]) for entry in data_size_over_time],
+        "data": [
+            entry["total_size"] / 1024 if entry["total_size"] else 0
+            for entry in data_size_over_time
+        ],  # Convert to KB
+    }
+
+    context = {
+        "total_users": total_users,
+        "total_data_collected": total_data_collected,
+        "avg_data_collected_per_participant": avg_data_collected_per_participant,
+        "users_chart_data": users_chart_data,
+        "data_collection_chart_data": data_collection_chart_data,
+        "data_size_chart_data": data_size_chart_data,
+    }
+    print(context)
+    return render(request, "dashboard.html", context)
+
+
+# Serializers
+class ResearchProjectSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = ResearchProject
+        fields = ['id', 'title', 'description', 'start_date', 'end_date', 'created_by']
+
+class DataCollectionSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = DataCollection
+        fields = ['id', 'participant', 'project', 'data_submission_date', 'data']
+
+# API Views
+@api_view(['GET'])
+def get_research_projects(request):
+    projects = ResearchProject.objects.all()
+    serializer = ResearchProjectSerializer(projects, many=True)
+    return Response(serializer.data)
+
+@api_view(['GET'])
+def get_project_with_data(request, project_id):
+    try:
+        # Get project details
+        project = ResearchProject.objects.get(id=project_id)
+        project_data = ResearchProjectSerializer(project).data
+        
+        # Get related data collections
+        data_collections = DataCollection.objects.filter(project=project)
+        data_collections_data = DataCollectionSerializer(data_collections, many=True).data
+        
+        return Response({
+            'project': project_data,
+            'data_collections': data_collections_data
+        })
+    except ResearchProject.DoesNotExist:
+        return Response({'error': 'Project not found'}, status=404)

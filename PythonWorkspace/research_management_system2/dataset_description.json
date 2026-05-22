@@ -1,0 +1,130 @@
+{
+  "basic_info": {
+    "rows": 500000,
+    "columns": 16,
+    "memory_usage": 293.2392873764038
+  },
+  "null_counts": {
+    "title": 0,
+    "description": 0,
+    "created_at": 0,
+    "updated_at": 0,
+    "status": 0,
+    "project_type": 0,
+    "priority": 0,
+    "start_date": 0,
+    "end_date": 0,
+    "due_date": 0,
+    "budget": 0,
+    "created_by_id": 0,
+    "duration_days": 0,
+    "days_to_due": 0,
+    "is_overdue": 0,
+    "budget_category": 0
+  },
+  "data_types": {
+    "title": "object",
+    "description": "object",
+    "created_at": "datetime64[ns]",
+    "updated_at": "datetime64[ns]",
+    "status": "object",
+    "project_type": "object",
+    "priority": "object",
+    "start_date": "object",
+    "end_date": "object",
+    "due_date": "object",
+    "budget": "float64",
+    "created_by_id": "int64",
+    "duration_days": "int64",
+    "days_to_due": "int64",
+    "is_overdue": "bool",
+    "budget_category": "category"
+  },
+  "numerical_stats": {
+    "created_at": {
+      "count": 500000,
+      "mean": "2023-11-30 08:28:39.605019648",
+      "min": "2022-11-29 23:55:47",
+      "25%": "2023-05-31 22:30:28",
+      "50%": "2023-11-29 23:53:09.500000",
+      "75%": "2024-05-31 01:48:52.249999872",
+      "max": "2024-11-29 11:18:00",
+      "std": NaN
+    },
+    "updated_at": {
+      "count": 500000,
+      "mean": "2024-05-30 21:40:27.884728064",
+      "min": "2023-11-30 05:36:17",
+      "25%": "2024-02-29 13:21:46",
+      "50%": "2024-05-30 19:10:48.500000",
+      "75%": "2024-08-30 07:17:35.249999872",
+      "max": "2024-11-29 11:21:30",
+      "std": NaN
+    },
+    "budget": {
+      "count": 500000.0,
+      "mean": 500695.63648483925,
+      "min": 1004.8558002084853,
+      "25%": 251397.0845182264,
+      "50%": 500537.6784548408,
+      "75%": 750383.0922624785,
+      "max": 999993.6119138065,
+      "std": 288268.90678161616
+    },
+    "created_by_id": {
+      "count": 500000.0,
+      "mean": 247.551024,
+      "min": 1.0,
+      "25%": 89.0,
+      "50%": 277.0,
+      "75%": 415.0,
+      "max": 502.0,
+      "std": 163.42733388738353
+    },
+    "duration_days": {
+      "count": 500000.0,
+      "mean": 365.30401,
+      "min": 0.0,
+      "25%": 166.0,
+      "50%": 333.0,
+      "75%": 528.0,
+      "max": 1095.0,
+      "std": 243.54071594721188
+    },
+    "days_to_due": {
+      "count": 500000.0,
+      "mean": 180.624516,
+      "min": -727.0,
+      "25%": -37.0,
+      "50%": 183.0,
+      "75%": 406.0,
+      "max": 1082.0,
+      "std": 312.4993548400689
+    }
+  },
+  "categorical_stats": {
+    "status": {
+      "active": 125505,
+      "completed": 125194,
+      "on_hold": 124940,
+      "planning": 124361
+    },
+    "project_type": {
+      "development": 125225,
+      "analysis": 125222,
+      "research": 124786,
+      "other": 124767
+    },
+    "priority": {
+      "low": 166927,
+      "high": 166621,
+      "medium": 166452
+    },
+    "budget_category": {
+      "low": 125000,
+      "medium": 125000,
+      "high": 125000,
+      "very_high": 125000
+    }
+  }
+}
