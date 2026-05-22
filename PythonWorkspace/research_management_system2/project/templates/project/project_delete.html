@@ -1,0 +1,33 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="min-h-screen bg-gray-50 py-12">
+    <div class="container mx-auto px-4 max-w-md">
+        <div class="bg-white rounded-xl shadow-lg p-8">
+            <div class="text-center mb-8">
+                <h1 class="text-2xl font-bold text-gray-800 mb-2">Delete Project</h1>
+                <p class="text-gray-600">Are you sure you want to delete:</p>
+                <p class="text-lg font-semibold text-red-600 mt-2">"{{ project.title }}"?</p>
+            </div>
+            
+            <div class="bg-red-50 border border-red-200 rounded-lg p-4 mb-6">
+                <p class="text-sm text-red-700">
+                    ⚠️ This action cannot be undone. This will permanently delete the project and all associated data.
+                </p>
+            </div>
+
+            <form method="post" class="flex gap-4 justify-center">
+                {% csrf_token %}
+                <a href="{% url 'project_list' %}" 
+                   class="px-6 py-2.5 rounded-lg border border-gray-300 text-gray-700 hover:bg-gray-50 transition-colors duration-200">
+                    Cancel
+                </a>
+                <button type="submit" 
+                        class="px-6 py-2.5 rounded-lg bg-red-600 text-white hover:bg-red-700 transition-colors duration-200">
+                    Delete Project
+                </button>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

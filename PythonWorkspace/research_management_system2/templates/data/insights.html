@@ -1,0 +1,37 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container mx-auto px-4 py-8">
+    {% if error %}
+        <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded">
+            {{ error }}
+        </div>
+    {% else %}
+        <h2 class="text-2xl font-bold mb-6">Data Insights</h2>
+        
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <div class="bg-white p-6 rounded-lg shadow">
+                <h3 class="font-bold mb-2">Basic Statistics</h3>
+                <p>Total Projects: {{ insights.total_projects }}</p>
+                <p>Total Budget: ${{ insights.total_budget|floatformat:2 }}</p>
+                <p>Average Duration: {{ insights.avg_duration|floatformat:1 }} days</p>
+                <p>Overdue Projects: {{ insights.overdue_projects }}</p>
+            </div>
+            
+            <div class="bg-white p-6 rounded-lg shadow">
+                <h3 class="font-bold mb-2">Status Distribution</h3>
+                {% for status, count in insights.status_distribution.items %}
+                    <p>{{ status|title }}: {{ count }}</p>
+                {% endfor %}
+            </div>
+            
+            <div class="bg-white p-6 rounded-lg shadow">
+                <h3 class="font-bold mb-2">Budget Categories</h3>
+                {% for category, count in insights.budget_categories.items %}
+                    <p>{{ category|title }}: {{ count }}</p>
+                {% endfor %}
+            </div>
+        </div>
+    {% endif %}
+</div>
+{% endblock %} 

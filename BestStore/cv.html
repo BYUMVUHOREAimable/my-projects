@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Aimable Byumvuhore - CV</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary-color: #0f172a; /* Dark Navy */
+            --accent-color: #2563eb; /* Royal Blue */
+            --text-color: #334155;
+            --light-bg: #f8fafc;
+            --white: #ffffff;
+        }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; line-height: 1.6; color: var(--text-color); background-color: #e2e8f0; font-size: 14px; }
+        .resume-container { max-width: 210mm; margin: 20px auto; background: var(--white); box-shadow: 0 0 20px rgba(0,0,0,0.1); display: grid; grid-template-columns: 30% 70%; min-height: 297mm; }
+        .left-col { background-color: var(--primary-color); color: var(--white); padding: 30px 20px; }
+        .left-col h3 { color: var(--white); text-transform: uppercase; font-size: 16px; border-bottom: 1px solid var(--accent-color); padding-bottom: 5px; margin-top: 25px; margin-bottom: 15px; letter-spacing: 1px; }
+        .contact-info div { margin-bottom: 12px; font-size: 13px; display: flex; align-items: center; gap: 10px; }
+        .contact-info a { color: #cbd5e1; text-decoration: none; }
+        .skill-tags { display: flex; flex-wrap: wrap; gap: 8px; }
+        .skill-tag { background: rgba(255,255,255,0.1); padding: 4px 8px; border-radius: 4px; font-size: 12px; }
+        .left-col ul { list-style: none; padding-left: 5px; }
+        .left-col li { margin-bottom: 8px; font-size: 13px; }
+        .right-col { padding: 40px 30px; background-color: var(--white); }
+        .header-name h1 { font-size: 32px; color: var(--primary-color); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 5px; }
+        .header-name h2 { font-size: 18px; color: var(--accent-color); font-weight: 500; margin-bottom: 20px; }
+        .section-title { display: flex; align-items: center; gap: 10px; color: var(--primary-color); font-size: 18px; font-weight: 700; border-bottom: 2px solid #e2e8f0; padding-bottom: 8px; margin-top: 25px; margin-bottom: 15px; }
+        .section-title i { color: var(--accent-color); }
+        .experience-item { margin-bottom: 20px; }
+        .exp-header { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 5px; }
+        .exp-role { font-weight: 700; font-size: 15px; color: var(--primary-color); }
+        .exp-date { font-size: 12px; color: #64748b; font-style: italic; }
+        .tech-stack-used { font-size: 12px; color: #64748b; font-family: monospace; margin-bottom: 5px; }
+        .right-col ul { list-style-type: disc; margin-left: 20px; }
+        .right-col li { margin-bottom: 4px; color: var(--text-color); }
+        /* Photo styling */
+        .photo { width: 100%; max-width: 120px; border-radius: 50%; margin-bottom: 20px; }
+        @media print { body { background: none; -webkit-print-color-adjust: exact; } .resume-container { margin: 0; box-shadow: none; width: 100%; height: 100%; } }
+    </style>
+</head>
+<body>
+<div class="resume-container">
+    <div class="left-col">
+        <!-- Add Photo Section -->
+        <div style="text-align: center;">
+            <img src="/images/bai.jpg" alt="Aimable Byumvuhore" class="photo" />
+        </div>
+        <h3>Contact</h3>
+        <div class="contact-info">
+            <div><i class="fas fa-phone"></i> (+250) 796 004 898</div>
+            <div><i class="fas fa-phone"></i> (+250) 736 377 629</div>
+            <div><i class="fas fa-envelope"></i> aimablebyumvuhore@gmail.com</div>
+            <div><i class="fas fa-map-marker-alt"></i> Rwanda</div>
+            <div><i class="fab fa-linkedin"></i> <a href="https://linkedin.com/in/BYUMVUHOREAimable">LinkedIn Profile</a></div>
+            <div><i class="fab fa-github"></i> <a href="https://github.com/BYUMVUHOREAimable">GitHub Profile</a></div>
+            <div><i class="fas fa-globe"></i> <a href="https://byumvuhore-aimable-protofolio.vercel.app/">My Portfolio</a></div>
+        </div>
+        <h3>Education</h3>
+        <div style="margin-bottom: 15px;">
+            <strong style="display:block; color:white;">Rwanda Coding Academy</strong>
+            <span style="font-size: 12px; color: #cbd5e1;">2022 – 2025</span>
+            <p style="font-size: 12px; margin-top:5px;">Adv. Level: Software Programming & Embedded Systems</p>
+        </div>
+        <h3>Core Skills</h3>
+        <div class="skill-tags">
+            <span class="skill-tag">Python & Django</span><span class="skill-tag">JavaScript / TypeScript</span><span class="skill-tag">React.js & Next.js</span><span class="skill-tag">Node.js & Express</span><span class="skill-tag">C / C++</span><span class="skill-tag">PostgreSQL / MongoDB</span><span class="skill-tag">Docker & CI/CD</span><span class="skill-tag">Cybersecurity (OWASP)</span>
+        </div>
+        <h3>Languages</h3>
+        <ul><li><strong>English:</strong> Fluent</li><li><strong>French:</strong> Intermediate</li><li><strong>Kinyarwanda:</strong> Native</li></ul>
+        <h3>Certifications</h3>
+        <ul>
+            <li><a href="https://drive.google.com/drive/folders/16SL64FzUiLDhXWuxNp11y5zgQJKiZlcR">JavaScript Algorithms & Data Structures (FreeCodeCamp)</a></li>
+            <li><a href="https://drive.google.com/drive/folders/1OWmMOYJLFSJaG27O6mB6gYzGTkDF4VY1">Responsive Web Design (FreeCodeCamp)</a></li>
+        </ul>
+    </div>
+    <div class="right-col">
+        <div class="header-name"><h1>Aimable Byumvuhore</h1><h2>Full-Stack Software Engineer</h2></div>
+        <p>Highly skilled Full-Stack Developer and Rwanda Coding Academy graduate. I specialize in building secure, modular, and scalable applications using <strong>React, Next.js, and Python</strong>. With a strong foundation in embedded systems and cybersecurity, I focus on backend architecture and clean code practices. I am seeking to contribute to dynamic teams building high-performance tech solutions.</p>
+        <div class="section-title"><i class="fas fa-rocket"></i> Featured Projects</div>
+        <div class="experience-item">
+            <div class="exp-header"><span class="exp-role">CodeSync – Remote Interview Platform</span><span class="exp-date">March 2025</span></div>
+            <div class="tech-stack-used">Stack: Next.js, TypeScript, WebRTC, Stream, Clerk Auth, Tailwind</div>
+            <ul><li>Developed a high-performance video interview platform featuring real-time calling, screen sharing, and session recording.</li><li>Implemented secure user authentication and authorization flows using Clerk.</li><li>Designed a responsive UI with Shadcn and Tailwind CSS, utilizing Server Components for optimized loading speeds.</li><li>Deployed a scalable solution handling dynamic routing and real-time data synchronization.</li></ul>
+        </div>
+        <div class="experience-item">
+            <div class="exp-header"><span class="exp-role">Event Connect – Event Management System</span><span class="exp-date">Ongoing</span></div>
+            <div class="tech-stack-used">Role: Lead Full-Stack Developer & Project Manager</div>
+            <ul><li>Leading the development of a digital ecosystem connecting event planners with venue owners and service providers.</li><li>Engineered the backend to handle event registration, ticketing, and venue selection logic.</li><li>Created algorithms for personalized event recommendations to increase user engagement and revenue potential.</li><li>Streamlined the local event industry by digitizing manual booking processes.</li></ul>
+        </div>
+        <div class="experience-item">
+            <div class="exp-header"><span class="exp-role">Friend Store Application</span><span class="exp-date">2025</span></div>
+            <div class="tech-stack-used">Stack: Python (Flask), React.js, SQLite, SQLAlchemy</div>
+            <ul><li>Built a full-stack CRUD application allowing users to manage contacts with a seamless interface.</li><li>Developed a robust REST API using Flask and integrated SQLAlchemy for efficient database querying.</li><li>Designed a responsive frontend with Chakra UI, including Dark/Light mode toggle.</li><li>Deployed on Render with a fully configured virtual environment and production-ready settings.</li></ul>
+        </div>
+        <div class="section-title"><i class="fas fa-tools"></i> Technical Expertise</div>
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+            <div><strong>Backend & Database</strong><ul><li>Django, Flask, Express.js, Spring Boot</li><li>REST APIs, GraphQL, JWT Auth</li><li>MySQL, PostgreSQL, Redis</li></ul></div>
+            <div><strong>DevOps & Tools</strong><ul><li>Git/GitHub, GitLab CI/CD</li><li>Docker, Linux, Nginx</li><li>AWS (Basic), Heroku, Render</li></ul></div>
+        </div>
+        <div class="section-title"><i class="fas fa-users"></i> References</div>
+        <ul>
+            <li><strong>Dr. Papias NIYIGENA</strong> – Principal at Rwanda Coding Academy<br>Email: <a href="mailto:papiasni@gmail.com">papiasni@gmail.com</a></li>
+            <li><strong>Mr. Emmanuel NIYIGABA</strong> – Lecturer, Rwanda Coding Academy<br>Email: <a href="mailto:nemmy59@gmail.com">nemmy59@gmail.com</a></li>
+            <li><strong>Mr. Projecte HABYARIMANA</strong> – Physics Lecturer at Rwanda Coding Academy<br>Email: <a href="mailto:prohaby2000@gmail.com">prohaby2000@gmail.com</a></li>
+            <li><strong>Mr. Mukama Louis</strong> – Machine Learning, GUI Lecturer at Rwanda Coding Academy<br>Email: <a href="mailto:mukamalouis1@gmail.com">mukamalouis1@gmail.com</a></li>
+        </ul>
+    </div>
+</div>
+</body>
+</html>
